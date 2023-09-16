@@ -22,8 +22,12 @@ const options = {
 
 app.use(cors(options));
 
-app.get('/', (req, res)=> {
+app.get('/api', (req, res)=> {
   res.send('Holita, desde el server en express');
+});
+
+app.get('/api/nueva-ruta', (req, res)=> {
+  res.send('Holita, soy una nueva ruta');
 });
 
 routerApi(app)
