@@ -1,23 +1,22 @@
 const express = require('express');
 
-const UserService = require('./../services/user.service');
+const CustomerService = require('./../services/customer.service');
 const validatorHandler = require('./../middlewares/validator.handler');
-const { updateUserSchema, createUserSchema, getUserSchema } = require('../schema/user.schema');
+const { createCustomerSchema, getCustomerSchema, updateCustomerSchema } = require('../schema/customer.schema');
 
 const router = express.Router();
-const service = new UserService();
+const service = new CustomerService();
 
 router.get('/', async (req, res, next) => {
   try {
-    const users = await service.find();
-    res.json(users);
+    res.json(await service.find());
   } catch (error) {
     next(error);
   }
 });
 
 router.get('/:id',
-  validatorHandler(getUserSchema, 'params'),
+  validatorHandler(getCustomerSchema, 'params'),
   async (req, res, next) => {
     try {
       const { id } = req.params;
@@ -30,12 +29,11 @@ router.get('/:id',
 );
 
 router.post('/',
-  validatorHandler(createUserSchema, 'body'),
+  validatorHandler(createCustomerSchema, 'body'),
   async (req, res, next) => {
     try {
       const body = req.body;
-      const newCategory = await service.create(body);
-      res.status(201).json(newCategory);
+      res.status(201).json(await service.create(body));
     } catch (error) {
       next(error);
     }
@@ -43,14 +41,13 @@ router.post('/',
 );
 
 router.patch('/:id',
-  validatorHandler(getUserSchema, 'params'),
-  validatorHandler(updateUserSchema, 'body'),
+  validatorHandler(getCustomerSchema, 'params'),
+  validatorHandler(updateCustomerSchema, 'body'),
   async (req, res, next) => {
     try {
       const { id } = req.params;
       const body = req.body;
-      const category = await service.update(id, body);
-      res.json(category);
+      res.status(201).json(await service.update(id, body));
     } catch (error) {
       next(error);
     }
@@ -58,7 +55,7 @@ router.patch('/:id',
 );
 
 router.delete('/:id',
-  validatorHandler(getUserSchema, 'params'),
+  validatorHandler(getCustomerSchema, 'params'),
   async (req, res, next) => {
     try {
       const { id } = req.params;
